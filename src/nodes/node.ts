@@ -50,12 +50,12 @@ export async function node(
     }
   }
 
-  function broadcastMessage() {
+  async function broadcastMessage() {
     if (isFaulty) return;
     const message = { x: state.x!, k: state.k! };
     receivedMessages.push(message);
     for (let i = 0; i < N; i++) {
-      if (i !== nodeId) sendMessage(i, message);
+      if (i !== nodeId) await sendMessage(i, message);
     }
   }
 
@@ -81,7 +81,7 @@ export async function node(
     const count1 = roundMessages.filter(m => m.x === 1).length;
     const majorityThreshold = Math.floor(requiredMessages / 2) + 1;
 
-    if (N > 3 * F) {
+    if (N > 2 * F) {
       if (count0 >= majorityThreshold) {
         state.x = 0;
         state.decided = true;
